@@ -63,7 +63,10 @@ function LinkItem({
 			</div>
 			<div className='ml1'>
 				<div>
-					{description} <span className='link'>({getDomain(url)})</span>
+					<a href={url} className='black no-underline'>
+						{description}
+					</a>{' '}
+					<span className='link'>({getDomain(url)})</span>
 				</div>
 				<div className='f6 lh-copy gray'>
 					{votes.length} votes by {name} {distanceInWordsToNow(created)} ago
