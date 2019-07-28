@@ -22,6 +22,14 @@ class Firebase {
 	login(email, password) {
 		return this.auth.signInWithEmailAndPassword(email, password)
 	}
+
+	async logout() {
+		await this.auth.signOut()
+	}
+
+	async resetPassword(email) {
+		await this.auth.sendPasswordResetEmail(email)
+	}
 }
 
 const firebase = new Firebase()
