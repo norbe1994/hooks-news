@@ -2,13 +2,15 @@ import React from 'react'
 import useFormValidation from './useFormValidation'
 import validateLogin from './validateLogin'
 
+import firebase from '../../firebase'
+
 const INITIAL_STATE = {
 	name: '',
 	email: '',
 	password: '',
 }
 
-function Login(props) {
+function Login({ history: { push } }) {
 	const {
 		handleSubmit,
 		handleBlur,
@@ -16,8 +18,21 @@ function Login(props) {
 		values: { name, email, password },
 		errors,
 		isSubmitting,
-	} = useFormValidation(INITIAL_STATE, validateLogin)
+	} = useFormValidation(INITIAL_STATE, validateLogin, authenticateUser)
 	const [login, setLogin] = React.useState(false)
+	const [firebaseError, setFirebaseError] = React.useState(null)
+
+	async function authenticateUser() {
+		try {
+			login
+				? await firebase.login(email, password)
+				: await firebase.register(name, email, password)
+			push('/')
+		} catch (err) {
+			console.error('Authentication Error', err)
+			setFirebaseError(err.message)
+		}
+	}
 
 	return (
 		<div>
@@ -51,9 +66,10 @@ function Login(props) {
 					name='password'
 					type='password'
 					className={errors.password && 'error-input'}
-					placeholder='Choose a secure password'
+					placeholder='Your password'
 				/>
 				{errors.password && <p className='error-text'>{errors.password}</p>}
+				{firebaseError && <p className='error-text'>{firebaseError}</p>}
 				<div className='flex mt3'>
 					<button
 						type='submit'
