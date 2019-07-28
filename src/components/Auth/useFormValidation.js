@@ -1,5 +1,23 @@
-import React from "react";
+import React from 'react'
 
-function useFormValidation() {}
+function useFormValidation(initialState) {
+	const [values, setValue] = React.useState(initialState)
 
-export default useFormValidation;
+	function handleChange(event) {
+		event.persist()
+		const { name, value } = event.target
+		setValue(prevValues => ({
+			...prevValues,
+			[name]: value,
+		}))
+	}
+
+	function handleSubmit(event) {
+		event.preventDefault()
+		console.log(values)
+	}
+
+	return { handleSubmit, handleChange, values }
+}
+
+export default useFormValidation
